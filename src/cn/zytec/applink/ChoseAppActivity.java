@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -83,10 +85,9 @@ public class ChoseAppActivity extends Activity {
             vh.iv.setImageDrawable(info.activityInfo.loadIcon(getPackageManager()));
             vh.tv.setText(info.activityInfo.loadLabel(getPackageManager()));
             //GridView的item不响应，现在这监听了            
-            convertView.setOnClickListener(new OnClickListener() {
+            vh.iv.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					System.out.println(position);
 					App.addAppInfo(mApps.get(position));
 					TopFloatService.refreshIcon();
 					

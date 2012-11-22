@@ -17,6 +17,9 @@ public class App extends Application {
 	private static int currentPosition = 0;
 
 	public static void addAppInfo(ResolveInfo appInfo) {
+		if(resolveInfoList.contains(appInfo)) {
+			return ;
+		}
 		if(currentPosition == num) {
 			currentPosition = 0;
 		}

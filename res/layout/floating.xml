@@ -10,31 +10,35 @@
         android:id="@+id/app_one_iv"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:background="@drawable/imageview_selector" />
 
     <ImageView
         android:id="@+id/app_two_iv"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:background="@drawable/imageview_selector" />
 
     <ImageView
         android:id="@+id/app_three_iv"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:background="@drawable/imageview_selector" />
 
     <ImageView
         android:id="@+id/app_four_iv"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:background="@drawable/imageview_selector" />
 
     <ImageView
         android:id="@+id/center_iv"
         android:layout_width="72dp"
         android:layout_height="72dp"
-
+		android:background="@drawable/imageview_selector"
         android:src="@drawable/ic_launcher" />
 
 </LinearLayout>

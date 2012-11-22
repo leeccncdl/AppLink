@@ -19,6 +19,7 @@
 			android:layout_width="80dip"
 			android:gravity="center"
 			android:layout_gravity="center" 
+			android:background="@drawable/imageview_selector"
 			>
 		</ImageView>
 		<TextView 
