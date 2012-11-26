@@ -6,7 +6,10 @@ import java.io.OutputStream;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build.VERSION;
 import android.os.IBinder;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,14 +21,21 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class TopFloatService extends Service implements OnClickListener,
 		OnLongClickListener {
 
+	int sysVersion = Integer.parseInt(VERSION.SDK);
 	WindowManager wm = null;
 	WindowManager.LayoutParams wmParams = null;
 	View view;
-	static ImageView[] iv = new ImageView[4];
+
+	static ImageView[] iv = new ImageView[10];
+	static TextView[] tv = new TextView[10];
+	static LinearLayout[] linearlayout = new LinearLayout[10];
+
+	GestureDetector gestureDetector;
 
 	private ImageView back;
 	private ImageView menu;
@@ -42,12 +52,22 @@ public class TopFloatService extends Service implements OnClickListener,
 	private float y;
 
 	public static void refreshIcon() {
+
 		for (int i = 0; i < App.resolveInfoList.size(); i++) {
 			if (App.resolveInfoList.get(i) != null) {
+				linearlayout[i].setVisibility(View.VISIBLE);
 				iv[i].setImageDrawable(App.resolveInfoList.get(i).activityInfo
 						.loadIcon(App.pm));
+
+				tv[i].setText(App.resolveInfoList.get(i).activityInfo
+						.loadLabel(App.pm));
+
+			} else {
+				linearlayout[i].setVisibility(View.GONE);
+
 			}
 		}
+
 	}
 
 	@Override
@@ -57,15 +77,21 @@ public class TopFloatService extends Service implements OnClickListener,
 		findView();
 		createView();
 		setListener();
-		try {
-			mProcess = Runtime.getRuntime().exec("su");
-			mProcessOs = mProcess.getOutputStream();
-		} catch (IOException e) {
-			// throw new RuntimeException("Failed to start SUPER USER process",
-			// e);
+		gestureDetector = new GestureDetector(this, new GestureListener());
+		if (sysVersion < 14) {
 
-			rightCotent.setVisibility(View.GONE);
+			try {
+				mProcess = Runtime.getRuntime().exec("su");
+				mProcessOs = mProcess.getOutputStream();
+			} catch (IOException e) {
+				// throw new
+				// RuntimeException("Failed to start SUPER USER process",
+				// e);
+
+				rightCotent.setVisibility(View.GONE);
+			}
 		}
+
 	}
 
 	@Override
@@ -76,18 +102,37 @@ public class TopFloatService extends Service implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		Intent intent = null;
+		int position = 0;
 		switch (v.getId()) {
 		case R.id.app_one_iv:
-			intent = getDesAppIntent(0);
+			position = 0;
 			break;
 		case R.id.app_two_iv:
-			intent = getDesAppIntent(1);
+			position = 1;
 			break;
 		case R.id.app_three_iv:
-			intent = getDesAppIntent(2);
+			position = 2;
 			break;
 		case R.id.app_four_iv:
-			intent = getDesAppIntent(3);
+			position = 3;
+			break;
+		case R.id.app_five_iv:
+			position = 4;
+			break;
+		case R.id.app_six_iv:
+			position = 5;
+			break;
+		case R.id.app_seven_iv:
+			position = 6;
+			break;
+		case R.id.app_eight_iv:
+			position = 7;
+			break;
+		case R.id.app_nine_iv:
+			position = 8;
+			break;
+		case R.id.app_ten_iv:
+			position = 9;
 			break;
 		case R.id.back_iv:
 			btnClick(KeyEvent.KEYCODE_BACK);
@@ -101,32 +146,63 @@ public class TopFloatService extends Service implements OnClickListener,
 		default:
 			break;
 		}
+		intent = getDesAppIntent(position);
 		if (intent != null) {
 			startActivity(intent);
 		}
 	}
 
-	
 	@Override
 	public boolean onLongClick(View v) {
-		Intent intent = null;
+		int removePosition = 1000;
+		boolean iscenterLongClick = false;
 		switch (v.getId()) {
 		case R.id.center_iv:
-			intent = new Intent(TopFloatService.this, ChoseAppActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			if (intent != null) {
-				startActivity(intent);
-			}
+			iscenterLongClick = true;
+			break;
+		case R.id.app_one_iv:
+			removePosition = 0;
+			break;
+		case R.id.app_two_iv:
+			removePosition = 1;
+			break;
+		case R.id.app_three_iv:
+			removePosition = 2;
 			break;
 		case R.id.app_four_iv:
-			wm.removeView(view);
-			this.stopSelf();
-			App.exit();
+			removePosition = 3;
 			break;
+		case R.id.app_five_iv:
+			removePosition = 4;
+			break;
+		case R.id.app_six_iv:
+			removePosition = 5;
+			break;
+		case R.id.app_seven_iv:
+			removePosition = 6;
+			break;
+		case R.id.app_eight_iv:
+			removePosition = 7;
+			break;
+		case R.id.app_nine_iv:
+			removePosition = 8;
+			break;
+		case R.id.app_ten_iv:
+			removePosition = 9;
+			break;
+		// wm.removeView(view);
+		// this.stopSelf();
+		// App.exit();
 		default:
 			break;
 		}
-		return false;
+		if (!iscenterLongClick) {
+
+			App.removeAppInfo(removePosition);
+			refreshIcon();
+		}
+
+		return true;
 	}
 
 	protected void btnClick(int keyCode) {
@@ -134,15 +210,43 @@ public class TopFloatService extends Service implements OnClickListener,
 	}
 
 	protected void simulateKey(int keyCode) {
-		try {
-			String cmd = "input keyevent " + keyCode + "\n";
-			mProcessOs.write(cmd.getBytes());
-			mProcessOs.flush();
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to simulate keyevent", e);
-//			rightCotent.setVisibility(View.GONE);
+		if (sysVersion < 14) {
+			try {
+				String cmd = "input keyevent " + keyCode + "\n";
+				mProcessOs.write(cmd.getBytes());
+				mProcessOs.flush();
+			} catch (IOException e) {
+				// throw new RuntimeException("Failed to simulate keyevent", e);
+				rightCotent.setVisibility(View.GONE);
+			}
+		} else {
+			try {
+				System.out.println("--------------------------------");
+				String cmd = "input keyevent " + keyCode + "\n";
+				// mProcessOs.write(cmd.getBytes());
+				// mProcessOs.flush();
+				Runtime.getRuntime().exec(cmd);
+				// Log.e(LOG_TAG, "Simulate key code write ok");
+			} catch (IOException e) {
+				throw new RuntimeException("Failed to simulate keyevent", e);
+			}
+
 		}
+
 	}
+
+	// protected void simulateKey(int keyCode) {
+	// Log.e("simulate", "Simulate key code " + keyCode);
+	// try {
+	// String cmd = "input keyevent " + keyCode + "\n";
+	// // mProcessOs.write(cmd.getBytes());
+	// // mProcessOs.flush();
+	// Runtime.getRuntime().exec(cmd);
+	// // Log.e(LOG_TAG, "Simulate key code write ok");
+	// } catch (IOException e) {
+	// throw new RuntimeException("Failed to simulate keyevent", e);
+	// }
+	// }
 
 	private Intent getDesAppIntent(int appResolveInfoListPosition) {
 		Intent intent = null;
@@ -154,11 +258,38 @@ public class TopFloatService extends Service implements OnClickListener,
 	}
 
 	private void findView() {
+		System.out.println("Find View");
 		ivCenter = (ImageView) view.findViewById(R.id.center_iv);
 		iv[0] = (ImageView) view.findViewById(R.id.app_one_iv);
 		iv[1] = (ImageView) view.findViewById(R.id.app_two_iv);
 		iv[2] = (ImageView) view.findViewById(R.id.app_three_iv);
 		iv[3] = (ImageView) view.findViewById(R.id.app_four_iv);
+		iv[4] = (ImageView) view.findViewById(R.id.app_five_iv);
+		iv[5] = (ImageView) view.findViewById(R.id.app_six_iv);
+		iv[6] = (ImageView) view.findViewById(R.id.app_seven_iv);
+		iv[7] = (ImageView) view.findViewById(R.id.app_eight_iv);
+		iv[8] = (ImageView) view.findViewById(R.id.app_nine_iv);
+		iv[9] = (ImageView) view.findViewById(R.id.app_ten_iv);
+		tv[0] = (TextView) view.findViewById(R.id.app_one_tv);
+		tv[1] = (TextView) view.findViewById(R.id.app_two_tv);
+		tv[2] = (TextView) view.findViewById(R.id.app_three_tv);
+		tv[3] = (TextView) view.findViewById(R.id.app_four_tv);
+		tv[4] = (TextView) view.findViewById(R.id.app_five_tv);
+		tv[5] = (TextView) view.findViewById(R.id.app_six_tv);
+		tv[6] = (TextView) view.findViewById(R.id.app_seven_tv);
+		tv[7] = (TextView) view.findViewById(R.id.app_eight_tv);
+		tv[8] = (TextView) view.findViewById(R.id.app_nine_tv);
+		tv[9] = (TextView) view.findViewById(R.id.app_ten_tv);
+		linearlayout[0] = (LinearLayout) view.findViewById(R.id.app_one_ll);
+		linearlayout[1] = (LinearLayout) view.findViewById(R.id.app_two_ll);
+		linearlayout[2] = (LinearLayout) view.findViewById(R.id.app_three_ll);
+		linearlayout[3] = (LinearLayout) view.findViewById(R.id.app_four_ll);
+		linearlayout[4] = (LinearLayout) view.findViewById(R.id.app_five_ll);
+		linearlayout[5] = (LinearLayout) view.findViewById(R.id.app_six_ll);
+		linearlayout[6] = (LinearLayout) view.findViewById(R.id.app_seven_ll);
+		linearlayout[7] = (LinearLayout) view.findViewById(R.id.app_eight_ll);
+		linearlayout[8] = (LinearLayout) view.findViewById(R.id.app_nine_ll);
+		linearlayout[9] = (LinearLayout) view.findViewById(R.id.app_ten_ll);
 
 		back = (ImageView) view.findViewById(R.id.back_iv);
 		menu = (ImageView) view.findViewById(R.id.menu_iv);
@@ -189,8 +320,19 @@ public class TopFloatService extends Service implements OnClickListener,
 		ivCenter.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				x = event.getRawX() - (64 * 4 + 32);
-				y = event.getRawY() + (100);
+				int currentIconNum = 0;
+				for (int i = 0; i < App.resolveInfoList.size(); i++) {
+					if (App.resolveInfoList.get(i) != null) {
+						currentIconNum++;
+					}
+				}
+				if (currentIconNum < 5) {
+					currentIconNum = 5;
+				}
+				System.out.println(currentIconNum + "----------------");
+				gestureDetector.onTouchEvent(event);
+				x = event.getRawX() - (64 * currentIconNum + 32);
+				y = event.getRawY() + (100 + 10);
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 
@@ -202,7 +344,6 @@ public class TopFloatService extends Service implements OnClickListener,
 					break;
 				case MotionEvent.ACTION_UP:
 					if (Math.abs(event.getX() - mTouchStartX) > 30) {
-
 						updateViewPosition();
 					}
 					mTouchStartX = mTouchStartY = 0;
@@ -223,14 +364,43 @@ public class TopFloatService extends Service implements OnClickListener,
 	private void setListener() {
 		ivCenter.setOnLongClickListener(this);
 		// ivCenter.setOnClickListener(this);
-		iv[3].setOnLongClickListener(this);
 		iv[0].setOnClickListener(this);
 		iv[1].setOnClickListener(this);
 		iv[2].setOnClickListener(this);
 		iv[3].setOnClickListener(this);
+		iv[4].setOnClickListener(this);
+		iv[5].setOnClickListener(this);
+		iv[6].setOnClickListener(this);
+		iv[7].setOnClickListener(this);
+		iv[8].setOnClickListener(this);
+		iv[9].setOnClickListener(this);
+		iv[0].setOnLongClickListener(this);
+		iv[1].setOnLongClickListener(this);
+		iv[2].setOnLongClickListener(this);
+		iv[3].setOnLongClickListener(this);
+		iv[4].setOnLongClickListener(this);
+		iv[5].setOnLongClickListener(this);
+		iv[6].setOnLongClickListener(this);
+		iv[7].setOnLongClickListener(this);
+		iv[8].setOnLongClickListener(this);
+		iv[9].setOnLongClickListener(this);
 		back.setOnClickListener(this);
 		menu.setOnClickListener(this);
 		home.setOnClickListener(this);
 	}
 
+	class GestureListener extends SimpleOnGestureListener {
+
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+			Intent intent = new Intent(TopFloatService.this,
+					ChoseAppActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (intent != null) {
+				startActivity(intent);
+			}
+			return super.onDoubleTap(e);
+
+		}
+	}
 }

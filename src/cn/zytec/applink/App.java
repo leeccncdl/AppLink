@@ -12,7 +12,7 @@ public class App extends Application {
 
 	public static WindowManager.LayoutParams wmParams = new WindowManager.LayoutParams();
 	public static PackageManager pm;
-	private static int num = 4;
+	private static int num = 10;
 	public static List<ResolveInfo> resolveInfoList = new ArrayList<ResolveInfo>(
 			num);
 	private static int currentPosition = 0;
@@ -27,6 +27,14 @@ public class App extends Application {
 		resolveInfoList.set(currentPosition, appInfo);
 		currentPosition++;
 	}
+	
+	public static void removeAppInfo(int position) {
+		if(resolveInfoList.get(0)!=null && position!=1000) {
+			resolveInfoList.remove(resolveInfoList.get(position));
+			resolveInfoList.add(null);
+			currentPosition--;
+		}
+	}
 
 	@Override
 	public void onCreate() {
@@ -35,6 +43,10 @@ public class App extends Application {
 			resolveInfoList.add(null);
 		}
 		super.onCreate();
+	}
+	
+	public static PackageManager getPM() {
+		return pm;
 	}
 	
 	public static void exit() {

@@ -31,19 +31,45 @@ public final class R {
         public static final int right_back=0x7f020011;
     }
     public static final class id {
-        public static final int app_four_iv=0x7f070006;
-        public static final int app_one_iv=0x7f070003;
-        public static final int app_three_iv=0x7f070005;
-        public static final int app_two_iv=0x7f070004;
-        public static final int back_iv=0x7f070009;
-        public static final int center_iv=0x7f070007;
+        public static final int app_eight_iv=0x7f070019;
+        public static final int app_eight_ll=0x7f070018;
+        public static final int app_eight_tv=0x7f07001a;
+        public static final int app_five_iv=0x7f070010;
+        public static final int app_five_ll=0x7f07000f;
+        public static final int app_five_tv=0x7f070011;
+        public static final int app_four_iv=0x7f07000d;
+        public static final int app_four_ll=0x7f07000c;
+        public static final int app_four_tv=0x7f07000e;
+        public static final int app_nine_iv=0x7f07001c;
+        public static final int app_nine_ll=0x7f07001b;
+        public static final int app_nine_tv=0x7f07001d;
+        public static final int app_one_iv=0x7f070004;
+        public static final int app_one_ll=0x7f070003;
+        public static final int app_one_tv=0x7f070005;
+        public static final int app_seven_iv=0x7f070016;
+        public static final int app_seven_ll=0x7f070015;
+        public static final int app_seven_tv=0x7f070017;
+        public static final int app_six_iv=0x7f070013;
+        public static final int app_six_ll=0x7f070012;
+        public static final int app_six_tv=0x7f070014;
+        public static final int app_ten_iv=0x7f07001f;
+        public static final int app_ten_ll=0x7f07001e;
+        public static final int app_ten_tv=0x7f070020;
+        public static final int app_three_iv=0x7f07000a;
+        public static final int app_three_ll=0x7f070009;
+        public static final int app_three_tv=0x7f07000b;
+        public static final int app_two_iv=0x7f070007;
+        public static final int app_two_ll=0x7f070006;
+        public static final int app_two_tv=0x7f070008;
+        public static final int back_iv=0x7f070023;
+        public static final int center_iv=0x7f070021;
         public static final int grid_view_tv=0x7f070002;
         public static final int gridview_item_iv=0x7f070001;
-        public static final int home_iv=0x7f07000b;
-        public static final int menu_iv=0x7f07000a;
-        public static final int menu_settings=0x7f07000c;
+        public static final int home_iv=0x7f070025;
+        public static final int menu_iv=0x7f070024;
+        public static final int menu_settings=0x7f070026;
         public static final int myGrid=0x7f070000;
-        public static final int right_content_ll=0x7f070008;
+        public static final int right_content_ll=0x7f070022;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -62,5 +88,8 @@ public final class R {
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;
+        public static final int iconbutton_item_size=0x7f050001;
+        public static final int iconbutton_ll_size=0x7f050002;
+        public static final int iconbutton_tv_size=0x7f050003;
     }
 }

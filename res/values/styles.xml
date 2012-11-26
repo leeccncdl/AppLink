@@ -1,5 +1,20 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme" parent="android:Theme.Light" />
+
+    <style name="iconbutton_item_size">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="iconbutton_ll_size">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+    </style>
+    <style name="iconbutton_tv_size">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>
