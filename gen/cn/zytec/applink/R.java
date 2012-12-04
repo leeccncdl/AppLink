@@ -28,7 +28,8 @@ public final class R {
         public static final int menu=0x7f02000e;
         public static final int menu_se=0x7f02000f;
         public static final int menu_selector=0x7f020010;
-        public static final int right_back=0x7f020011;
+        public static final int quit=0x7f020011;
+        public static final int right_back=0x7f020012;
     }
     public static final class id {
         public static final int app_eight_iv=0x7f070019;
@@ -67,8 +68,12 @@ public final class R {
         public static final int gridview_item_iv=0x7f070001;
         public static final int home_iv=0x7f070025;
         public static final int menu_iv=0x7f070024;
-        public static final int menu_settings=0x7f070026;
+        public static final int menu_settings=0x7f07002a;
         public static final int myGrid=0x7f070000;
+        public static final int quit=0x7f070026;
+        public static final int quit_cancel=0x7f070029;
+        public static final int quit_ok_bt=0x7f070028;
+        public static final int quit_password_et=0x7f070027;
         public static final int right_content_ll=0x7f070022;
     }
     public static final class layout {
@@ -76,14 +81,18 @@ public final class R {
         public static final int chose_app=0x7f030001;
         public static final int chose_app_gridview_item=0x7f030002;
         public static final int floating=0x7f030003;
+        public static final int quit=0x7f030004;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int cancel=0x7f040006;
         public static final int hello_world=0x7f040001;
         public static final int menu_settings=0x7f040002;
+        public static final int ok=0x7f040005;
+        public static final int quit_tag=0x7f040004;
         public static final int title_activity_main=0x7f040003;
     }
     public static final class style {

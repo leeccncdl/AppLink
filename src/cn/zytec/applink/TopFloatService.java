@@ -25,34 +25,60 @@ import android.widget.TextView;
 
 public class TopFloatService extends Service implements OnClickListener,
 		OnLongClickListener {
+	
+	public static TopFloatService tfs;
+	
+	private int sysVersion = Integer.parseInt(VERSION.SDK);
+	public static WindowManager wm = null;
+	private WindowManager.LayoutParams wmParams = null;
+	public static  View view;
 
-	int sysVersion = Integer.parseInt(VERSION.SDK);
-	WindowManager wm = null;
-	WindowManager.LayoutParams wmParams = null;
-	View view;
+	private static ImageView[] iv = new ImageView[10];
+	private static TextView[] tv = new TextView[10];
+	private static LinearLayout[] linearlayout = new LinearLayout[10];
 
-	static ImageView[] iv = new ImageView[10];
-	static TextView[] tv = new TextView[10];
-	static LinearLayout[] linearlayout = new LinearLayout[10];
+	private GestureDetector gestureDetector;
 
-	GestureDetector gestureDetector;
-
+	private ImageView ivCenter;
 	private ImageView back;
 	private ImageView menu;
 	private ImageView home;
+	private ImageView quit;
 	private LinearLayout rightCotent;
 
 	private Process mProcess;
 	private OutputStream mProcessOs;
 
-	ImageView ivCenter;
 	private float mTouchStartX;
 	private float mTouchStartY;
 	private float x;
 	private float y;
+	
+	@Override
+	public void onCreate() {
+		tfs = this;
+		super.onCreate();
+		view = LayoutInflater.from(this).inflate(R.layout.floating, null);
+		findView();
+		createView();
+		setListener();
+		gestureDetector = new GestureDetector(this, new GestureListener());
+		
+		if (sysVersion < 14) {
+			try {
+				mProcess = Runtime.getRuntime().exec("su");
+				mProcessOs = mProcess.getOutputStream();
+			} catch (IOException e) {
+//				 throw new
+//				 RuntimeException("Failed to start SUPER USER process",
+//				 e);
+				rightCotent.setVisibility(View.GONE);
+			}
+		}
 
+	}
+	
 	public static void refreshIcon() {
-
 		for (int i = 0; i < App.resolveInfoList.size(); i++) {
 			if (App.resolveInfoList.get(i) != null) {
 				linearlayout[i].setVisibility(View.VISIBLE);
@@ -71,30 +97,6 @@ public class TopFloatService extends Service implements OnClickListener,
 	}
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		view = LayoutInflater.from(this).inflate(R.layout.floating, null);
-		findView();
-		createView();
-		setListener();
-		gestureDetector = new GestureDetector(this, new GestureListener());
-		if (sysVersion < 14) {
-
-			try {
-				mProcess = Runtime.getRuntime().exec("su");
-				mProcessOs = mProcess.getOutputStream();
-			} catch (IOException e) {
-				// throw new
-				// RuntimeException("Failed to start SUPER USER process",
-				// e);
-
-				rightCotent.setVisibility(View.GONE);
-			}
-		}
-
-	}
-
-	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
@@ -102,7 +104,7 @@ public class TopFloatService extends Service implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		Intent intent = null;
-		int position = 0;
+		int position = 99;
 		switch (v.getId()) {
 		case R.id.app_one_iv:
 			position = 0;
@@ -142,13 +144,29 @@ public class TopFloatService extends Service implements OnClickListener,
 			break;
 		case R.id.home_iv:
 			btnClick(KeyEvent.KEYCODE_HOME);
+			//Intent模拟返回Home
+//			Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
+//
+//            mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+//            mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//            startActivity(mHomeIntent);
+			break;
+		case R.id.quit:
+			Intent quitIntent = new Intent(TopFloatService.this,
+					Quit.class);
+			quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(quitIntent);
 			break;
 		default:
 			break;
 		}
-		intent = getDesAppIntent(position);
-		if (intent != null) {
-			startActivity(intent);
+		if(position!=99){
+			intent = getDesAppIntent(position);
+			if (intent != null) {
+				startActivity(intent);
+			}
+			
 		}
 	}
 
@@ -190,18 +208,14 @@ public class TopFloatService extends Service implements OnClickListener,
 		case R.id.app_ten_iv:
 			removePosition = 9;
 			break;
-		// wm.removeView(view);
-		// this.stopSelf();
-		// App.exit();
+
 		default:
 			break;
 		}
-		if (!iscenterLongClick) {
-
+		if (!iscenterLongClick && removePosition!=1000) {
 			App.removeAppInfo(removePosition);
 			refreshIcon();
 		}
-
 		return true;
 	}
 
@@ -221,36 +235,20 @@ public class TopFloatService extends Service implements OnClickListener,
 			}
 		} else {
 			try {
-				System.out.println("--------------------------------");
 				String cmd = "input keyevent " + keyCode + "\n";
-				// mProcessOs.write(cmd.getBytes());
-				// mProcessOs.flush();
 				Runtime.getRuntime().exec(cmd);
-				// Log.e(LOG_TAG, "Simulate key code write ok");
 			} catch (IOException e) {
-				throw new RuntimeException("Failed to simulate keyevent", e);
+				// throw new RuntimeException("Failed to simulate keyevent", e);
+				rightCotent.setVisibility(View.GONE);
 			}
 
 		}
 
 	}
 
-	// protected void simulateKey(int keyCode) {
-	// Log.e("simulate", "Simulate key code " + keyCode);
-	// try {
-	// String cmd = "input keyevent " + keyCode + "\n";
-	// // mProcessOs.write(cmd.getBytes());
-	// // mProcessOs.flush();
-	// Runtime.getRuntime().exec(cmd);
-	// // Log.e(LOG_TAG, "Simulate key code write ok");
-	// } catch (IOException e) {
-	// throw new RuntimeException("Failed to simulate keyevent", e);
-	// }
-	// }
-
 	private Intent getDesAppIntent(int appResolveInfoListPosition) {
 		Intent intent = null;
-		if (App.resolveInfoList.get(1) != null) {
+		if (App.resolveInfoList.get(0) != null) {
 			intent = App.pm.getLaunchIntentForPackage(App.resolveInfoList
 					.get(appResolveInfoListPosition).activityInfo.packageName);
 		}
@@ -258,7 +256,6 @@ public class TopFloatService extends Service implements OnClickListener,
 	}
 
 	private void findView() {
-		System.out.println("Find View");
 		ivCenter = (ImageView) view.findViewById(R.id.center_iv);
 		iv[0] = (ImageView) view.findViewById(R.id.app_one_iv);
 		iv[1] = (ImageView) view.findViewById(R.id.app_two_iv);
@@ -294,6 +291,7 @@ public class TopFloatService extends Service implements OnClickListener,
 		back = (ImageView) view.findViewById(R.id.back_iv);
 		menu = (ImageView) view.findViewById(R.id.menu_iv);
 		home = (ImageView) view.findViewById(R.id.home_iv);
+		quit = (ImageView) view.findViewById(R.id.quit);
 
 		rightCotent = (LinearLayout) view.findViewById(R.id.right_content_ll);
 
@@ -320,19 +318,19 @@ public class TopFloatService extends Service implements OnClickListener,
 		ivCenter.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				int currentIconNum = 0;
+				float currentIconNum = 0;//Caculate diatance use
 				for (int i = 0; i < App.resolveInfoList.size(); i++) {
 					if (App.resolveInfoList.get(i) != null) {
 						currentIconNum++;
 					}
 				}
 				if (currentIconNum < 5) {
-					currentIconNum = 5;
+					currentIconNum = 4.8f;//左边条形背景默认长度大约为4.8个Icon（每个64）的长度
 				}
-				System.out.println(currentIconNum + "----------------");
+
 				gestureDetector.onTouchEvent(event);
 				x = event.getRawX() - (64 * currentIconNum + 32);
-				y = event.getRawY() + (100 + 10);
+				y = event.getRawY() + (100 + 20);
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 
@@ -386,6 +384,9 @@ public class TopFloatService extends Service implements OnClickListener,
 		iv[9].setOnLongClickListener(this);
 		back.setOnClickListener(this);
 		menu.setOnClickListener(this);
+		quit.setOnClickListener(this);
+		//退出加给menu键的长按了
+//		menu.setOnLongClickListener(this);
 		home.setOnClickListener(this);
 	}
 

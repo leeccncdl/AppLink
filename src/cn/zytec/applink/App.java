@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 public class App extends Application {
 
+	public static String password = "allrunzy";
 	public static WindowManager.LayoutParams wmParams = new WindowManager.LayoutParams();
 	public static PackageManager pm;
 	private static int num = 10;
@@ -18,9 +19,16 @@ public class App extends Application {
 	private static int currentPosition = 0;
 
 	public static void addAppInfo(ResolveInfo appInfo) {
-		if (resolveInfoList.contains(appInfo)) {
-			return;
+
+//		if (resolveInfoList.contains(appInfo)) {
+//			return;
+//		}
+		for(int i=0;i<resolveInfoList.size();i++) {
+			if(resolveInfoList.get(i)!=null && resolveInfoList.get(i).activityInfo.packageName.equals(appInfo.activityInfo.packageName)) {
+				return ;
+			}
 		}
+		
 		if (currentPosition == num) {
 			currentPosition = 0;
 		}

@@ -6,6 +6,7 @@
     android:paddingLeft="10dp"
     android:paddingTop="10dp" >
 
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -232,7 +233,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="244dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:background="@drawable/right_back"
             android:gravity="center_horizontal"
@@ -241,6 +242,7 @@
             android:paddingTop="5dp" >
 
             <ImageView
+                android:layout_marginLeft="20dp"
                 android:id="@+id/back_iv"
                 style="@style/iconbutton_ll_size"
                 android:background="@drawable/back_selector" />
@@ -254,6 +256,10 @@
                 android:id="@+id/home_iv"
                 style="@style/iconbutton_ll_size"
                 android:background="@drawable/home_selector" />
+            <ImageView
+                android:id="@+id/quit"
+                style="@style/iconbutton_ll_size"
+                android:src="@drawable/quit"/>
         </LinearLayout>
     </LinearLayout>
 

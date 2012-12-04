@@ -2,7 +2,6 @@ package cn.zytec.applink;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -85,15 +84,6 @@ public class ChoseAppActivity extends Activity {
 			vh.iv.setImageDrawable(info.activityInfo
 					.loadIcon(getPackageManager()));
 			vh.tv.setText(info.activityInfo.loadLabel(getPackageManager()));
-			// GridView的item不响应，现在这监听了
-			// vh.iv.setOnClickListener(new OnClickListener() {
-			// @Override
-			// public void onClick(View v) {
-			// App.addAppInfo(mApps.get(position));
-			// TopFloatService.refreshIcon();
-			//
-			// }
-			// });
 			return convertView;
 		}
 
