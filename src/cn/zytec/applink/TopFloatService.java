@@ -22,10 +22,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.zytec.applink.animation.SpringAnimation;
+import cn.zytec.applink.animation.ZoomAnimation;
 
 public class TopFloatService extends Service implements OnClickListener,
 		OnLongClickListener {
 	
+	private static int centerCircleHeight = 100;
+	private static int upMenuHerght = 80;
+	private static int leftItemWidth = 48;
+	
+	//在QuitActivity关闭 service
 	public static TopFloatService tfs;
 	
 	private int sysVersion = Integer.parseInt(VERSION.SDK);
@@ -36,14 +43,18 @@ public class TopFloatService extends Service implements OnClickListener,
 	private static ImageView[] iv = new ImageView[10];
 	private static TextView[] tv = new TextView[10];
 	private static LinearLayout[] linearlayout = new LinearLayout[10];
-
+	
+	private LinearLayout upLinearLaout;
+	private LinearLayout downLinearLaout;
+	
+	private boolean isMenuShowing;
 	private GestureDetector gestureDetector;
 
 	private ImageView ivCenter;
 	private ImageView back;
 	private ImageView menu;
 	private ImageView home;
-	private ImageView quit;
+//	private ImageView quit;
 	private LinearLayout rightCotent;
 
 	private Process mProcess;
@@ -152,12 +163,12 @@ public class TopFloatService extends Service implements OnClickListener,
 //                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 //            startActivity(mHomeIntent);
 			break;
-		case R.id.quit:
-			Intent quitIntent = new Intent(TopFloatService.this,
-					Quit.class);
-			quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(quitIntent);
-			break;
+//		case R.id.quit:
+//			Intent quitIntent = new Intent(TopFloatService.this,
+//					Quit.class);
+//			quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			startActivity(quitIntent);
+//			break;
 		default:
 			break;
 		}
@@ -172,6 +183,13 @@ public class TopFloatService extends Service implements OnClickListener,
 
 	@Override
 	public boolean onLongClick(View v) {
+		if(isMenuShowing) {
+			SpringAnimation.startAnimations(
+					this.upLinearLaout, ZoomAnimation.Direction.HIDE);
+			SpringAnimation.startAnimations(
+					this.downLinearLaout, ZoomAnimation.Direction.HIDE);
+			isMenuShowing = false;
+		}
 		int removePosition = 1000;
 		boolean iscenterLongClick = false;
 		switch (v.getId()) {
@@ -291,9 +309,12 @@ public class TopFloatService extends Service implements OnClickListener,
 		back = (ImageView) view.findViewById(R.id.back_iv);
 		menu = (ImageView) view.findViewById(R.id.menu_iv);
 		home = (ImageView) view.findViewById(R.id.home_iv);
-		quit = (ImageView) view.findViewById(R.id.quit);
+//		quit = (ImageView) view.findViewById(R.id.quit);
 
 		rightCotent = (LinearLayout) view.findViewById(R.id.right_content_ll);
+		
+		upLinearLaout =(LinearLayout) view.findViewById(R.id.up_menu_ll);
+		downLinearLaout =(LinearLayout) view.findViewById(R.id.down_menu_ll);
 
 	}
 
@@ -324,13 +345,15 @@ public class TopFloatService extends Service implements OnClickListener,
 						currentIconNum++;
 					}
 				}
-				if (currentIconNum < 5) {
-					currentIconNum = 4.8f;//左边条形背景默认长度大约为4.8个Icon（每个64）的长度
+				if (currentIconNum < 6) {
+					currentIconNum = 5f;
 				}
 
 				gestureDetector.onTouchEvent(event);
-				x = event.getRawX() - (64 * currentIconNum + 32);
-				y = event.getRawY() + (100 + 20);
+				
+				x = event.getRawX() - (leftItemWidth * currentIconNum + 32);
+				y = event.getRawY() + (centerCircleHeight + upMenuHerght + 10);
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 
@@ -384,23 +407,123 @@ public class TopFloatService extends Service implements OnClickListener,
 		iv[9].setOnLongClickListener(this);
 		back.setOnClickListener(this);
 		menu.setOnClickListener(this);
-		quit.setOnClickListener(this);
-		//退出加给menu键的长按了
+//		quit.setOnClickListener(this);
 //		menu.setOnLongClickListener(this);
 		home.setOnClickListener(this);
+		
+		//为每个弹出菜单设置自定义监听器
+		for (int i = 0; i < upLinearLaout.getChildCount(); i++) {
+			upLinearLaout.getChildAt(i).setOnClickListener(
+					new SpringMenuLauncher(null,upLinearLaout.getChildAt(i).getId()));
+		}
+		for (int i = 0; i < downLinearLaout.getChildCount(); i++) {
+			downLinearLaout.getChildAt(i).setOnClickListener(
+					new SpringMenuLauncher(null,downLinearLaout.getChildAt(i).getId()));
+		}
+	}
+	
+	private void showMenus() {
+		int currentIconNum = 0;
+		for (int i = 0; i < App.resolveInfoList.size(); i++) {
+			if (App.resolveInfoList.get(i) != null) {
+				currentIconNum++;
+			}
+		}
+		if (currentIconNum <= 4) {
+			currentIconNum = 4;
+		} else {
+			currentIconNum--;
+		}
+		int MarginLeft = leftItemWidth * currentIconNum;
+		
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(48, 48);
+		lp.setMargins(MarginLeft, 42, 0, 0);
+		upLinearLaout.getChildAt(0).setLayoutParams(lp);
+		
+		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(48, 48);
+		lp2.setMargins(MarginLeft, 0, 0, 0);
+		downLinearLaout.getChildAt(0).setLayoutParams(lp2);
+
+		if (!isMenuShowing) {
+//			upLinearLaout.setVisibility(View.VISIBLE);
+//			downLinearLaout.setVisibility(View.VISIBLE);
+			SpringAnimation.startAnimations(
+					this.upLinearLaout, ZoomAnimation.Direction.SHOW);
+			SpringAnimation.startAnimations(
+					this.downLinearLaout, ZoomAnimation.Direction.SHOW);
+//			this.imageViewPlus.startAnimation(this.animRotateClockwise);
+		} else {
+			SpringAnimation.startAnimations(
+					this.upLinearLaout, ZoomAnimation.Direction.HIDE);
+			SpringAnimation.startAnimations(
+					this.downLinearLaout, ZoomAnimation.Direction.HIDE);
+//			this.imageViewPlus.startAnimation(this.animRotateAntiClockwise);
+//			upLinearLaout.setVisibility(View.GONE);
+//			downLinearLaout.setVisibility(View.GONE);
+		}
+		
+		isMenuShowing = !isMenuShowing;
 	}
 
 	class GestureListener extends SimpleOnGestureListener {
 
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
-			Intent intent = new Intent(TopFloatService.this,
-					ChoseAppActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			if (intent != null) {
-				startActivity(intent);
-			}
+			
+			showMenus();
+//			Intent intent = new Intent(TopFloatService.this,
+//					ChoseAppActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			if (intent != null) {
+//				startActivity(intent);
+//			}
 			return super.onDoubleTap(e);
+
+		}
+	}
+	
+	private class SpringMenuLauncher implements OnClickListener {
+		private final Class<?> cls;
+		private int viewid;
+
+		private SpringMenuLauncher(Class<?> c,int viewId) {
+			this.cls = c;
+			this.viewid = viewId;
+		}
+
+		
+		public void onClick(View v) {
+			showMenus();
+			switch (viewid) {
+			case R.id.above_menu_one_iv:
+
+				Intent intent = new Intent(TopFloatService.this,
+						ChoseAppActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				if (intent != null) {
+					startActivity(intent);
+				}
+				break;
+			case R.id.above_menu_two_iv:
+
+				break;
+			case R.id.above_menu_three_iv:
+
+				Intent quitIntent = new Intent(TopFloatService.this, Quit.class);
+				quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(quitIntent);
+			case R.id.beneath_menu_one_iv:
+
+				break;
+			case R.id.beneath_menu_two_iv:
+
+				break;
+			case R.id.beneath_menu_three_iv:
+
+				break;
+			default:
+				break;
+			}
 
 		}
 	}

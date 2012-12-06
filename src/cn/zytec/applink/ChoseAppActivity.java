@@ -26,7 +26,6 @@ public class ChoseAppActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chose_app);
-
 		mApps = getNotSysApp();
 
 		mGrid = (GridView) findViewById(R.id.myGrid);

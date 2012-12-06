@@ -1,18 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.zytec.applink"
     android:versionCode="2"
-    android:versionName="1.1" 
+    android:versionName="1.1" >
 
-    android:sharedUserId="android.uid.system">
+    <!--  android:sharedUserId="android.uid.system">-->
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INJECT_EVENTS" />
+    <!-- <uses-permission android:name="android.permission.INJECT_EVENTS" />  -->
     <application
-        android:name=".App"
+        android:name="cn.zytec.applink.App"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
@@ -33,16 +33,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Quit"
+            android:name="cn.zytec.applink.Quit"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
 
         <service
-            android:name=".TopFloatService"
+            android:name="cn.zytec.applink.TopFloatService"
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".StartupReceiver" >
+        <receiver android:name="cn.zytec.applink.StartupReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 

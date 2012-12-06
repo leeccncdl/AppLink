@@ -2,7 +2,6 @@ package cn.zytec.applink;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Application;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -20,9 +19,6 @@ public class App extends Application {
 
 	public static void addAppInfo(ResolveInfo appInfo) {
 
-//		if (resolveInfoList.contains(appInfo)) {
-//			return;
-//		}
 		for(int i=0;i<resolveInfoList.size();i++) {
 			if(resolveInfoList.get(i)!=null && resolveInfoList.get(i).activityInfo.packageName.equals(appInfo.activityInfo.packageName)) {
 				return ;
