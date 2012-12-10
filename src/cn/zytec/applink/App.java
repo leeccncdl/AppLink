@@ -18,7 +18,6 @@ public class App extends Application {
 	private static int currentPosition = 0;
 
 	public static void addAppInfo(ResolveInfo appInfo) {
-
 		for(int i=0;i<resolveInfoList.size();i++) {
 			if(resolveInfoList.get(i)!=null && resolveInfoList.get(i).activityInfo.packageName.equals(appInfo.activityInfo.packageName)) {
 				return ;
