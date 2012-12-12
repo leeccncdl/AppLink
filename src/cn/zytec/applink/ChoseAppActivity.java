@@ -36,7 +36,7 @@ public class ChoseAppActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				System.out.println(position);
+//				System.out.println(position);
 				App.addAppInfo(mApps.get(position));
 				TopFloatService.refreshIcon();
 			}
@@ -82,6 +82,7 @@ public class ChoseAppActivity extends Activity {
 			}
 			vh.iv.setImageDrawable(info.activityInfo
 					.loadIcon(getPackageManager()));
+//			System.out.println("----"+info.activityInfo.loadLabel(getPackageManager())+"----");
 			vh.tv.setText(info.activityInfo.loadLabel(getPackageManager()));
 			return convertView;
 		}

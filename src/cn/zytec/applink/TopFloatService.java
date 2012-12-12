@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build.VERSION;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -190,49 +191,57 @@ public class TopFloatService extends Service implements OnClickListener,
 					this.downLinearLaout, ZoomAnimation.Direction.HIDE);
 			isMenuShowing = false;
 		}
-		int removePosition = 1000;
+		int longClickPosition = 1000;
 		boolean iscenterLongClick = false;
 		switch (v.getId()) {
 		case R.id.center_iv:
 			iscenterLongClick = true;
 			break;
 		case R.id.app_one_iv:
-			removePosition = 0;
+			longClickPosition = 0;
 			break;
 		case R.id.app_two_iv:
-			removePosition = 1;
+			longClickPosition = 1;
 			break;
 		case R.id.app_three_iv:
-			removePosition = 2;
+			longClickPosition = 2;
 			break;
 		case R.id.app_four_iv:
-			removePosition = 3;
+			longClickPosition = 3;
 			break;
 		case R.id.app_five_iv:
-			removePosition = 4;
+			longClickPosition = 4;
 			break;
 		case R.id.app_six_iv:
-			removePosition = 5;
+			longClickPosition = 5;
 			break;
 		case R.id.app_seven_iv:
-			removePosition = 6;
+			longClickPosition = 6;
 			break;
 		case R.id.app_eight_iv:
-			removePosition = 7;
+			longClickPosition = 7;
 			break;
 		case R.id.app_nine_iv:
-			removePosition = 8;
+			longClickPosition = 8;
 			break;
 		case R.id.app_ten_iv:
-			removePosition = 9;
+			longClickPosition = 9;
 			break;
 
 		default:
 			break;
 		}
-		if (!iscenterLongClick && removePosition!=1000) {
-			App.removeAppInfo(removePosition);
-			refreshIcon();
+		//跳转到新的Activity，传递AppName，在新的Activity里匹配应用名称，有对应介绍则显示，无对应介绍做相应提示
+		if (!iscenterLongClick && longClickPosition!=1000 && App.resolveInfoList.get(longClickPosition)!=null) {
+//			App.removeAppInfo(longClickPosition);
+//			refreshIcon();
+			
+			Intent intent = new Intent(this,Introduce.class);
+			intent.putExtra("appName",App.resolveInfoList.get(longClickPosition).activityInfo
+					.loadLabel(App.pm));
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			startActivity(intent);
+
 		}
 		return true;
 	}
@@ -513,7 +522,10 @@ public class TopFloatService extends Service implements OnClickListener,
 				quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(quitIntent);
 			case R.id.beneath_menu_one_iv:
-
+				for (int i = 0; i < 10; i++) {
+					App.resolveInfoList.set(i, null);
+				}
+				refreshIcon();
 				break;
 			case R.id.beneath_menu_two_iv:
 

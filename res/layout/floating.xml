@@ -314,7 +314,7 @@
         <cn.zytec.applink.ImageButtonExtend
             android:id="@+id/beneath_menu_one_iv"
             style="@style/icon_menu_size"
-            android:src="@drawable/down1"
+            android:src="@drawable/minus"
             android:layout_marginLeft="275dp"
             android:background="@drawable/imageview_selector" 
             android:visibility="gone"/>

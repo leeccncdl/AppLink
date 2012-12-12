@@ -33,8 +33,9 @@ public final class R {
         public static final int menu=0x7f020013;
         public static final int menu_se=0x7f020014;
         public static final int menu_selector=0x7f020015;
-        public static final int quit=0x7f020016;
-        public static final int right_back=0x7f020017;
+        public static final int minus=0x7f020016;
+        public static final int quit=0x7f020017;
+        public static final int right_back=0x7f020018;
     }
     public static final class id {
         public static final int above_menu_one_iv=0x7f070004;
@@ -79,12 +80,13 @@ public final class R {
         public static final int grid_view_tv=0x7f070002;
         public static final int gridview_item_iv=0x7f070001;
         public static final int home_iv=0x7f070029;
+        public static final int introduce_tv=0x7f07002e;
         public static final int menu_iv=0x7f070028;
-        public static final int menu_settings=0x7f070031;
+        public static final int menu_settings=0x7f070032;
         public static final int myGrid=0x7f070000;
-        public static final int quit_cancel=0x7f070030;
-        public static final int quit_ok_bt=0x7f07002f;
-        public static final int quit_password_et=0x7f07002e;
+        public static final int quit_cancel=0x7f070031;
+        public static final int quit_ok_bt=0x7f070030;
+        public static final int quit_password_et=0x7f07002f;
         public static final int right_content_ll=0x7f070026;
         public static final int up_menu_ll=0x7f070003;
     }
@@ -93,18 +95,24 @@ public final class R {
         public static final int chose_app=0x7f030001;
         public static final int chose_app_gridview_item=0x7f030002;
         public static final int floating=0x7f030003;
-        public static final int quit=0x7f030004;
+        public static final int introduce=0x7f030004;
+        public static final int quit=0x7f030005;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int boc=0x7f040008;
         public static final int cancel=0x7f040006;
         public static final int hello_world=0x7f040001;
+        public static final int introduce_tip=0x7f040007;
+        public static final int jiaowu=0x7f04000a;
+        public static final int jinrong=0x7f04000b;
         public static final int menu_settings=0x7f040002;
         public static final int ok=0x7f040005;
         public static final int quit_tag=0x7f040004;
+        public static final int taoyuan=0x7f040009;
         public static final int title_activity_main=0x7f040003;
     }
     public static final class style {

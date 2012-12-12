@@ -8,4 +8,9 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
 
+    <string name="introduce_tip">对不起，该应用暂时没有介绍</string>
+    <string name="boc">BankOfChina，中国银行辽宁省分行</string>
+    <string name="taoyuan">桃源街道互动终端介绍</string>
+    <string name="jiaowu">教务手册</string>
+    <string name="jinrong">金融业务偕行工具</string>
 </resources>
