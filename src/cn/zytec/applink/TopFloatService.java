@@ -2,7 +2,6 @@ package cn.zytec.applink;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
